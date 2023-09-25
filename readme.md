@@ -12,6 +12,7 @@ Spotipy is a lightweight Python library for the Spotify Web API. With Spotipy yo
 
 ## Architecture
 
+![image](https://github.com/luizhyamada/spotify-databrics/assets/57925185/4eff1d7e-a5fc-408c-9c10-f0d8bb0e3019)
 
 ## Steps
 - Use the Spotipy API to extract data from Spotify.
