@@ -63,48 +63,31 @@ mount_s3_bucket(access_key, secret_key, aws_bucket_name_gold)
 
 # MAGIC %sql
 # MAGIC
-# MAGIC CREATE TABLE IF NOT EXISTS bronze.tb_albums
+# MAGIC CREATE TABLE IF NOT EXISTS silver.tb_albums
 # MAGIC (
 # MAGIC   album_id string,
+# MAGIC   album_name string,
+# MAGIC   album_release_date string,
+# MAGIC   album_total_tracks long,
 # MAGIC   created_at string,
-# MAGIC   name string,
-# MAGIC   release_date string,
-# MAGIC   total_tracks long,
 # MAGIC   updated_at string,
-# MAGIC   url string,
 # MAGIC   date date
 # MAGIC )
-# MAGIC LOCATION '/mnt/bronze-luiz-spotify-project-how/data/albums/';
+# MAGIC LOCATION '/mnt/silver-luiz-spotify-project-how/data/albums/';
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC
-# MAGIC CREATE TABLE IF NOT EXISTS bronze.tb_artists
+# MAGIC CREATE TABLE IF NOT EXISTS silver.tb_artists
 # MAGIC (
 # MAGIC   artist_id string,
 # MAGIC   artist_name string,
 # MAGIC   created_at string,
-# MAGIC   external_url string,
 # MAGIC   updated_at string,
 # MAGIC   date date
 # MAGIC )
-# MAGIC LOCATION '/mnt/bronze-luiz-spotify-project-how/data/artists/';
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC
-# MAGIC CREATE TABLE IF NOT EXISTS bronze.tb_songs
-# MAGIC (
-# MAGIC   artist_id string,
-# MAGIC   artist_name string,
-# MAGIC   created_at string,
-# MAGIC   external_url string,
-# MAGIC   updated_at string,
-# MAGIC   date date
-# MAGIC )
-# MAGIC LOCATION '/mnt/bronze-luiz-spotify-project-how/data/tracks/';
+# MAGIC LOCATION '/mnt/silver-luiz-spotify-project-how/data/artists/';
 
 # COMMAND ----------
 
@@ -113,17 +96,16 @@ mount_s3_bucket(access_key, secret_key, aws_bucket_name_gold)
 # MAGIC CREATE TABLE IF NOT EXISTS silver.tb_tracks
 # MAGIC (
 # MAGIC   track_id string,
-# MAGIC   track_name string,
-# MAGIC   duration_ms long,
-# MAGIC   popularity long,
 # MAGIC   album_id string,
-# MAGIC   album_name string,
-# MAGIC   artist_name string,
-# MAGIC   created_at timestamp,
-# MAGIC   updated_at timestamp,
-# MAGIC   date_partition date
+# MAGIC   artist_id string,
+# MAGIC   track_name string,
+# MAGIC   track_popularity long,
+# MAGIC   track_added_at string,
+# MAGIC   created_at string,
+# MAGIC   updated_at string,
+# MAGIC   date date
 # MAGIC )
-# MAGIC LOCATION '/mnt/silver-luiz-spotify-project-how/data/tb_tracks/';
+# MAGIC LOCATION '/mnt/silver-luiz-spotify-project-how/data/tracks/';
 
 # COMMAND ----------
 
@@ -133,49 +115,14 @@ mount_s3_bucket(access_key, secret_key, aws_bucket_name_gold)
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 # MAGIC %sql
-# MAGIC
-# MAGIC drop table gold.tb_albums_details_agg
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC
-# MAGIC DROP TABLE IF EXISTS gold.tb_tracks_details_agg;
-# MAGIC CREATE TABLE IF NOT EXISTS gold.tb_tracks_details_agg
+# MAGIC DROP TABLE IF EXISTS gold.tb_songs_agg;
+# MAGIC CREATE TABLE IF NOT EXISTS gold.tb_songs_agg
 # MAGIC (
-# MAGIC track_name string,
-# MAGIC artist_name string,
-# MAGIC avg_duration double,
-# MAGIC avg_popularity double
+# MAGIC   track_name string,
+# MAGIC   track_popularity long,
+# MAGIC   album_name string,
+# MAGIC   artist_name string
 # MAGIC )
-# MAGIC LOCATION '/mnt/gold-luiz-spotify-project-how/data/tb_tracks_details_agg/';
-
-# COMMAND ----------
-
-# MAGIC %sql
 # MAGIC
-# MAGIC DROP TABLE IF EXISTS gold.tb_albums_details_agg;
-# MAGIC CREATE TABLE IF NOT EXISTS gold.tb_albums_details_agg
-# MAGIC (
-# MAGIC album_name string,
-# MAGIC total_tracks long
-# MAGIC )
-# MAGIC LOCATION '/mnt/gold-luiz-spotify-project-how/data/tb_albums_details_agg/';
-
-# COMMAND ----------
-
-# MAGIC %sql 
-# MAGIC
-# MAGIC DROP TABLE IF EXISTS gold.tb_artists_details_agg;
-# MAGIC CREATE TABLE IF NOT EXISTS gold.tb_artists_details_agg
-# MAGIC (
-# MAGIC artist_name string,
-# MAGIC artist_appearances long
-# MAGIC )
-# MAGIC LOCATION '/mnt/gold-luiz-spotify-project-how/data/tb_artists_details_agg/';
-# MAGIC
+# MAGIC LOCATION '/mnt/gold-luiz-spotify-project-how/data/songs';
