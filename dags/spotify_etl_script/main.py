@@ -62,6 +62,8 @@ class DataWriter:
             aws_access_key_id=aws_credentials.aws_access_key,
             aws_secret_access_key=aws_credentials.aws_secret_key,
         )
+        self.created_at = datetime.datetime.now(datetime.timezone.utc)
+        self.updated_at = datetime.datetime.now(datetime.timezone.utc)
 
     def _write_row(self, row: str):
         self.data_buffer.write(row.encode())
@@ -72,9 +74,13 @@ class DataWriter:
 
     def _write_to_file(self, data: [List, dict]):
         if isinstance(data, dict):
+            data["created_at"] = self.created_at.isoformat()  # Add created_at timestamp
+            data["updated_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()  # Add updated_at timestamp
             self._write_row(json.dumps(data) + "\n")
         elif isinstance(data, list):
             for element in data:
+                element["created_at"] = self.created_at.isoformat()  # Add created_at timestamp
+                element["updated_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()  # Add updated_at timestamp
                 self._write_row(json.dumps(element) + "\n")
         else:
             raise ValueError
